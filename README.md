@@ -18,7 +18,7 @@ Guests scan a QR code at the bar, roll a 3D die, and get a randomly chosen cockt
 
 ## Features
 
-- Rolls use `crypto.getRandomValues()` with rejection sampling (unbiased). Odds are set by each drink's `weight` in `index.html`: Non-Alcoholic 1 (about 9%), each cocktail 2 (about 18%).
+- Rolls use `crypto.getRandomValues()` with rejection sampling (unbiased). Odds are set by each drink's `weight` in `index.html`: Non-Alcoholic 5 (5%), each cocktail 19 (19%).
 - Optional synthesized sound (rattle, bounces, glass clink), off by default, toggled with the speaker button.
 - "זה שלי!" opens an order ticket guests can show at the bar.
 - Every few rolls a toast invites guests to raise a glass to the couple.

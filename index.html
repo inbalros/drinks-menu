@@ -743,7 +743,7 @@ html.locked, html.locked body{ overflow: hidden; }
   var WHITE_TS = '0 1px 0 rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.28)';
   var DRINKS = [
     {
-      key: "nonalc", name: "Non-Alcoholic Drink", weight: 1, face: "Non&#8209;Alcoholic<br>Drink", small: true,
+      key: "nonalc", name: "Non-Alcoholic Drink", weight: 5, face: "Non&#8209;Alcoholic<br>Drink", small: true,
       c1: "#c0a8ff", c2: "#6a4bd6", fc: "#ffffff", ts: WHITE_TS, tint: "#ece5ff", deep: "#4b2fb0",
       tag: "בלי אלכוהול, עם המון טעם",
       intro: "הפעם הולכים על משהו ללא אלכוהול! בקשו מהמיקסולוגים שלנו להכין לכם קוקטייל ללא אלכוהול, במיוחד בשבילכם ובדיוק כמו שאתם אוהבים.",
@@ -752,7 +752,7 @@ html.locked, html.locked body{ overflow: hidden; }
       recipe: "בלי מתכון קבוע, בהתאמה אישית לטעם שלכם"
     },
     {
-      key: "aperol", weight: 2, name: "Aperol Spritz", face: "Aperol<br>Spritz",
+      key: "aperol", weight: 19, name: "Aperol Spritz", face: "Aperol<br>Spritz",
       c1: "#ffa143", c2: "#d9380f", fc: "#ffffff", ts: WHITE_TS, tint: "#ffe6d2", deep: "#a8330c",
       tag: "קיץ איטלקי בכוס, גם בדצמבר",
       intro: "בועות, תפוזים וקצת שמש איטלקית! האפרול שפריץ בא להרים לכם את מצב הרוח (ואת הכוס). קליל, מבעבע ומרענן, ולגימה אחת מספיקה כדי להרגיש על מרפסת מול הים.",
@@ -760,7 +760,7 @@ html.locked, html.locked body{ overflow: hidden; }
       recipe: "אפרול, שמפניה, ספרייט, סודה ודש תפוזים"
     },
     {
-      key: "blue", weight: 2, name: "Blue Me Away!", sub: "Blue Lagoon", face: "Blue Me<br>Away!",
+      key: "blue", weight: 19, name: "Blue Me Away!", sub: "Blue Lagoon", face: "Blue Me<br>Away!",
       c1: "#47c8ff", c2: "#1640c9", fc: "#ffffff", ts: WHITE_TS, tint: "#dcefff", deep: "#1037a8",
       tag: "כחול שמשאיר אתכם בלי מילים",
       intro: "הקובייה החליטה שהגיע הזמן לצבע! הכחול העז הזה נראה מהמם ביד, מדהים בתמונות ומרענן בכל לגימה. רק תיזהרו, הוא עלול לסחוף אתכם ישר לרחבה.",
@@ -768,7 +768,7 @@ html.locked, html.locked body{ overflow: hidden; }
       recipe: "וודקה, סאוור ובלו קרסאו"
     },
     {
-      key: "cosmo", weight: 2, name: "Cosmopolitan", face: "Cosmo&shy;politan", small: true,
+      key: "cosmo", weight: 19, name: "Cosmopolitan", face: "Cosmo&shy;politan", small: true,
       c1: "#ff5a90", c2: "#9c0f45", fc: "#ffffff", ts: WHITE_TS, tint: "#ffe0ea", deep: "#940c40",
       tag: "קלאסיקה אלגנטית בוורוד",
       intro: "אלגנטי, ורוד ופירותי בדיוק במידה: הקוסמופוליטן הוא קלאסיקה שאף פעם לא יוצאת מהאופנה. מחזיקים את כוס המרטיני, מחייכים למצלמה ומרגישים כוכבי הערב.",
@@ -776,7 +776,7 @@ html.locked, html.locked body{ overflow: hidden; }
       recipe: "וודקה, חמוציות, סאוור ודש תפוזים"
     },
     {
-      key: "mojito", weight: 2, name: "Mojito", face: "Mojito",
+      key: "mojito", weight: 19, name: "Mojito", face: "Mojito",
       c1: "#74e3a4", c2: "#0f7d4a", fc: "#ffffff", ts: WHITE_TS, tint: "#d9f6e5", deep: "#0b6a3e",
       tag: "רענן, ירוק ומלא נענע",
       intro: "קריר, ירוק ומלא בנענע טרייה: המוחיטו הוא משב רוח קובני באמצע החתונה. בדיוק מה שצריך כדי להתרענן בין ריקוד לריקוד ולחזור לרחבה עם אנרגיות מחודשות.",
@@ -784,7 +784,7 @@ html.locked, html.locked body{ overflow: hidden; }
       recipe: "רום לבן, סאוור, ליקר תפוז, לימון ונענע כתושים"
     },
     {
-      key: "peach", weight: 2, name: "Peach Please!", sub: "The Naughty", face: "Peach<br>Please!",
+      key: "peach", weight: 19, name: "Peach Please!", sub: "The Naughty", face: "Peach<br>Please!",
       c1: "#ffd9a8", c2: "#ff8a66", fc: "#5c2112", ts: "0 1px 0 rgba(255,255,255,.45)", tint: "#ffe9dc", deep: "#a4401f",
       tag: "פירותי, טרופי וקצת שובב",
       intro: "פירותי, טרופי ושובב בדיוק במידה. אפרסק ואננס פוגשים רום כהה, ויש סיבה טובה לכך שבשמו המקורי קוראים לו The Naughty. לגימה אחת, ואתם כבר בחופשה באיים.",
@@ -928,7 +928,7 @@ html.locked, html.locked body{ overflow: hidden; }
   })();
 
   /* Weighted pick. Each drink's chance is its weight out of the total:
-     Non-Alcoholic 1/11 (about 9%), each cocktail 2/11 (about 18%).
+     Non-Alcoholic 5/100 (5%), each cocktail 19/100 (19%).
      secureIndex() is unbiased, so these odds are exact. */
   function pickDrink(){
     var total = 0, i;
