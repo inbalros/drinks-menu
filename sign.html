@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>שלט QR לבר · Pour Decisions</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700&family=Playfair+Display:ital,wght@0,800;1,600;1,800&display=swap">
+<style>
+/* Printable A5 sign for the cocktail bar. Print at A5, no margins, background graphics on. */
+:root{
+  color-scheme: dark;
+  --night: #120f1f; --gold: #e2bf7d; --ivory: #fbf4e6; --ink: #241c2e; --text: #f6efe2; --text-soft: #c9bfd6;
+  --f-latin: "Playfair Display", Georgia, serif;
+  --f-he-display: "Frank Ruhl Libre", "David", serif;
+  --f-body: "Heebo", Arial, sans-serif;
+}
+@page{ size: A5 portrait; margin: 0; }
+*{ box-sizing: border-box; }
+html, body{ margin: 0; background: #3b3548; color: var(--text); font-family: var(--f-body); }
+body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+.help{
+  max-width: 148mm; margin: 18px auto 14px; padding: 12px 16px;
+  border-radius: 12px; background: #fbf4e6; color: #241c2e; font-size: 14px; line-height: 1.6;
+}
+.help b{ font-weight: 700; }
+
+.sheet{
+  position: relative;
+  width: 148mm; height: 210mm;
+  margin: 0 auto 24px;
+  overflow: hidden;
+  background-color: var(--night);
+  background-image:
+    radial-gradient(120% 55% at 50% -5%, #3a2a55 0%, rgba(58,42,85,0) 62%),
+    radial-gradient(70% 35% at 50% 100%, rgba(226,191,125,.12) 0%, rgba(226,191,125,0) 70%);
+  box-shadow: 0 20px 60px rgba(0,0,0,.45);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 15mm 13mm 11mm;
+  text-align: center;
+}
+.frame, .frame2{ position: absolute; pointer-events: none; border: 0.35mm solid rgba(226,191,125,.75); border-radius: 4mm; }
+.frame{ inset: 6mm; }
+.frame2{ inset: 7.6mm; border-width: 0.2mm; border-color: rgba(226,191,125,.4); border-radius: 3mm; }
+.corner{ position: absolute; width: 3mm; height: 3mm; background: var(--gold); transform: rotate(45deg); }
+.c1{ top: 4.6mm; left: calc(50% - 1.5mm); }
+.c2{ bottom: 4.6mm; left: calc(50% - 1.5mm); }
+
+.couple{ display: flex; align-items: center; gap: 3mm; font-family: var(--f-he-display); font-weight: 700; font-size: 13pt; color: var(--gold); }
+.couple::before, .couple::after{ content: ""; width: 10mm; height: 0.3mm; background: linear-gradient(90deg, rgba(226,191,125,0), var(--gold)); }
+.couple::after{ transform: scaleX(-1); }
+.couple .amp{ font-family: var(--f-latin); font-style: italic; font-weight: 600; color: #f3dcae; font-size: 1.15em; }
+.date{ font-family: var(--f-latin); font-size: 9pt; letter-spacing: .32em; color: var(--text-soft); direction: ltr; margin-top: .5mm; }
+.title{
+  margin: 2mm 0 0;
+  font-family: var(--f-latin); font-weight: 800; font-style: italic;
+  font-size: 34pt; line-height: 1;
+  color: var(--gold);
+  background: linear-gradient(175deg, #fff3d6 8%, #e9c584 46%, #b88a45 92%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  direction: ltr; padding: 0 1mm 1mm;
+}
+.title .dot{ -webkit-text-fill-color: #ff8fb1; color: #ff8fb1; }
+
+.die{ direction: ltr; unicode-bidi: isolate; width: 46mm; height: 46mm; margin-top: 3mm; filter: drop-shadow(0 3mm 4mm rgba(0,0,0,.5)); }
+
+.ask{ margin: 3mm 0 0; font-family: var(--f-he-display); font-weight: 900; font-size: 21pt; line-height: 1.15; color: var(--text); }
+.ask2{ margin: 1mm 0 0; font-size: 12.5pt; font-weight: 500; color: var(--gold); }
+
+.qr-box{
+  margin-top: 5mm;
+  background: var(--ivory);
+  border-radius: 5mm;
+  padding: 4mm 4mm 2.6mm;
+  box-shadow: 0 0 0 0.6mm var(--gold), 0 0 0 2mm rgba(226,191,125,.18);
+  display: flex; flex-direction: column; align-items: center; gap: 1.6mm;
+}
+.qr-box svg.qr{ display: block; width: 40mm; height: 40mm; }
+.qr-cap{ font-size: 10pt; font-weight: 700; color: var(--ink); }
+
+.steps{
+  margin-top: 5mm; display: flex; gap: 2.4mm; justify-content: center; align-items: center;
+  font-size: 10.5pt; font-weight: 500; color: var(--text);
+}
+.steps .sep{ color: var(--gold); font-size: 9pt; }
+.small{ margin-top: auto; font-size: 8.5pt; color: var(--text-soft); line-height: 1.5; }
+.url{ direction: ltr; unicode-bidi: isolate; font-family: var(--f-latin); color: var(--gold); letter-spacing: .02em; }
+
+@media screen and (max-width: 640px){ .sheet{ zoom: .62; } .help{ margin-inline: 12px; } }
+@media print{
+  html, body{ background: var(--night); }
+  .help{ display: none; }
+  .sheet{ margin: 0; box-shadow: none; page-break-after: avoid; break-after: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="help">
+  <b>הדפסה:</b> <bdi>Ctrl+P</bdi> (במק: <bdi>⌘+P</bdi>) ← גודל נייר <b>A5</b> ← שוליים: <b>ללא</b> ← לסמן <b>גרפיקת רקע</b>.
+  לבית דפוס: באותו חלון בחרו לשמור כקובץ <bdi>PDF</bdi> ושלחו אותו.
+  לפני ההדפסה סרקו את הקוד בטלפון וודאו שהוא פותח את האתר.
+</div>
+
+<main class="sheet">
+  <div class="frame"></div><div class="frame2"></div>
+  <span class="corner c1"></span><span class="corner c2"></span>
+
+  <div class="couple">ענבל <span class="amp">&amp;</span> אלון</div>
+  <div class="date">14.12.2026</div>
+  <h1 class="title" lang="en">Pour Decisions<span class="dot">.</span></h1>
+
+  <svg class="die" viewBox="0 0 200 200" direction="ltr" aria-hidden="true">
+    <defs>
+      <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbe3ad"/><stop offset=".45" stop-color="#dcb26a"/><stop offset="1" stop-color="#a47634"/></linearGradient>
+      <linearGradient id="peach" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd9a8"/><stop offset="1" stop-color="#ff8a66"/></linearGradient>
+      <linearGradient id="aperol" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffa143"/><stop offset="1" stop-color="#d9380f"/></linearGradient>
+      <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#47c8ff"/><stop offset="1" stop-color="#1640c9"/></linearGradient>
+    </defs>
+    <!-- top: Peach Please! -->
+    <g transform="matrix(0.866,0.5,-0.866,0.5,100,30)">
+      <rect width="70" height="70" rx="7" fill="url(#gold)"/>
+      <rect x="5" y="5" width="60" height="60" rx="9" fill="url(#peach)"/>
+      <text x="35" y="33" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="800" font-size="11" fill="#5c2112">Peach</text>
+      <text x="35" y="46" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="800" font-size="11" fill="#5c2112">Please!</text>
+    </g>
+    <!-- left: Aperol Spritz -->
+    <g transform="matrix(0.866,0.5,0,1,39.4,65)">
+      <rect width="70" height="70" rx="7" fill="url(#gold)"/>
+      <rect x="5" y="5" width="60" height="60" rx="9" fill="url(#aperol)"/>
+      <rect width="70" height="70" rx="7" fill="#000" opacity=".12"/>
+      <text x="35" y="33" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="800" font-size="11" fill="#fff">Aperol</text>
+      <text x="35" y="46" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="800" font-size="11" fill="#fff">Spritz</text>
+    </g>
+    <!-- right: Blue Me Away! -->
+    <g transform="matrix(0.866,-0.5,0,1,100,100)">
+      <rect width="70" height="70" rx="7" fill="url(#gold)"/>
+      <rect x="5" y="5" width="60" height="60" rx="9" fill="url(#blue)"/>
+      <rect width="70" height="70" rx="7" fill="#000" opacity=".26"/>
+      <text x="35" y="33" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="800" font-size="11" fill="#fff">Blue Me</text>
+      <text x="35" y="46" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="800" font-size="11" fill="#fff">Away!</text>
+    </g>
+  </svg>
+
+  <p class="ask">לא בטוחים מה להזמין?</p>
+  <p class="ask2">סרקו, הטילו את הקובייה ותנו לה לבחור לכם קוקטייל!</p>
+
+  <div class="qr-box">
+    <!-- QR:START --><svg viewBox="0 0 33 33" class="qr"><path stroke="#241c2e" d="M0 0.5h7m1 0h1m2 0h3m1 0h1m1 0h1m1 0h2m1 0h2m2 0h7m-33 1h1m5 0h1m2 0h3m1 0h1m3 0h1m4 0h1m1 0h1m1 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m2 0h1m3 0h1m1 0h1m1 0h2m2 0h1m4 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m2 0h1m1 0h1m2 0h2m3 0h2m1 0h3m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h2m1 0h1m2 0h1m1 0h1m1 0h1m2 0h3m2 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m1 0h2m2 0h1m1 0h3m3 0h1m5 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-23 1h1m1 0h2m7 0h1m-21 1h7m4 0h6m4 0h1m1 0h1m2 0h2m3 0h1m-30 1h3m1 0h1m1 0h5m1 0h2m1 0h4m1 0h1m2 0h2m1 0h2m1 0h1m-33 1h3m1 0h1m1 0h1m5 0h3m1 0h1m1 0h1m2 0h2m2 0h2m1 0h1m1 0h2m-32 1h1m3 0h2m1 0h5m1 0h1m1 0h1m4 0h3m1 0h1m1 0h1m1 0h4m-32 1h1m1 0h1m1 0h1m1 0h1m1 0h1m3 0h1m1 0h2m2 0h1m5 0h2m1 0h3m2 0h1m-33 1h5m4 0h2m1 0h1m1 0h4m2 0h1m2 0h1m2 0h1m2 0h1m1 0h2m-32 1h1m3 0h3m1 0h5m2 0h1m1 0h2m2 0h1m2 0h2m2 0h1m1 0h1m-31 1h1m2 0h2m2 0h3m3 0h2m1 0h6m2 0h4m1 0h1m-29 1h2m1 0h2m2 0h3m6 0h3m1 0h4m1 0h2m3 0h1m-33 1h1m3 0h1m2 0h1m1 0h1m3 0h1m2 0h2m1 0h2m1 0h2m2 0h2m1 0h2m1 0h1m-33 1h2m4 0h6m1 0h4m1 0h1m1 0h1m1 0h1m1 0h1m1 0h3m1 0h2m-32 1h3m5 0h6m2 0h3m2 0h10m1 0h1m-33 1h1m2 0h1m1 0h3m1 0h2m2 0h1m1 0h1m3 0h3m2 0h2m1 0h3m1 0h2m-33 1h4m1 0h1m3 0h1m4 0h1m2 0h2m2 0h1m1 0h1m1 0h2m2 0h1m2 0h1m-33 1h1m2 0h1m1 0h3m2 0h1m1 0h1m2 0h1m2 0h1m1 0h1m5 0h4m1 0h1m-32 1h1m1 0h1m5 0h1m1 0h1m1 0h3m2 0h1m3 0h2m2 0h1m1 0h1m1 0h4m-33 1h1m1 0h3m1 0h1m6 0h2m1 0h2m5 0h6m2 0h1m-24 1h5m3 0h2m1 0h3m2 0h1m3 0h1m1 0h1m1 0h1m-33 1h7m1 0h3m2 0h2m1 0h1m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h1m-31 1h1m5 0h1m1 0h1m1 0h2m1 0h2m2 0h5m1 0h2m3 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h3m1 0h1m4 0h2m2 0h1m2 0h6m-30 1h1m1 0h3m1 0h1m1 0h1m3 0h3m1 0h1m1 0h1m1 0h1m4 0h1m2 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m2 0h1m3 0h1m1 0h1m1 0h1m2 0h2m2 0h2m2 0h1m-31 1h1m5 0h1m1 0h1m1 0h2m1 0h1m3 0h1m1 0h3m6 0h3m-31 1h7m4 0h3m5 0h1m2 0h1m1 0h4m1 0h1m1 0h1"/></svg><!-- QR:END -->
+    <span class="qr-cap">סרקו עם מצלמת הטלפון</span>
+  </div>
+
+  <div class="steps">
+    <span>סורקים</span><span class="sep">✦</span><span>מטילים</span><span class="sep">✦</span><span>מרימים כוסית</span>
+  </div>
+
+  <p class="small">
+    המיקסולוגים שלנו ישמחו להתאים לכם כל משקה, גם בלי אלכוהול.<br>
+    <span class="url"><!-- URL:START -->inbalros.github.io/drinks-menu<!-- URL:END --></span>
+  </p>
+</main>
+</body>
+</html>
