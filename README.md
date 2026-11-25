@@ -12,6 +12,8 @@ Guests scan a QR code at the bar, roll a 3D die, and get a randomly chosen cockt
 | `sw.js` | Service worker. Caches the page after the first visit so it opens instantly and works offline. |
 | `sign.html` | Printable A5 sign for the bar with the QR code. Open in a browser and print (A5, no margins, background graphics on). |
 | `tools/make_qr.py` | Regenerates the QR code in `sign.html` (`pip install segno`, then `python tools/make_qr.py [URL]`). |
+| `qr/` | QR code for the site (`drinks-menu-qr.png` for print, `drinks-menu-qr.svg` vector) and the poster `whatToChoose-with-real-qr.png`. |
+| `tools/make_qr_images.py` | Rebuilds everything in `qr/` and verifies each image decodes to the site URL (`pip install segno pillow opencv-python-headless`). |
 | `tools/embed_fonts.py` | Re-embeds the fonts subset to the page's characters (`pip install fonttools brotli`, then `python tools/embed_fonts.py`). |
 
 ## Features
