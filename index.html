@@ -290,13 +290,11 @@ button{ font: inherit; color: inherit; }
 .btn[disabled] svg{ animation: wobble .6s ease-in-out infinite; }
 @keyframes wobble{ 0%,100%{ transform: rotate(-12deg); } 50%{ transform: rotate(12deg); } }
 .hint{ margin: -4px 0 0; font-size: .86rem; color: var(--text-soft); }
-/* Shortcut to the bar notes, pinned to the top corner opposite the sound button */
+/* Shortcut to the bar notes, sitting beside the wedding date */
+.date-row{ display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px 14px; margin-top: 4px; }
 .bar-link{
-  position: absolute; z-index: 5;
-  top: max(14px, env(safe-area-inset-top, 0px));
-  right: max(14px, env(safe-area-inset-right, 0px));
   display: inline-flex; align-items: center; justify-content: center; gap: 5px;
-  min-height: 44px; padding: 6px 13px;
+  min-height: 40px; padding: 5px 13px;
   border-radius: 999px;
   border: 1px solid rgba(226,191,125,.75);
   background: rgba(226,191,125,.14);
@@ -313,9 +311,8 @@ button{ font: inherit; color: inherit; }
   0%, 100%{ box-shadow: 0 0 0 0 rgba(226,191,125,0); }
   50%{ box-shadow: 0 0 0 6px rgba(226,191,125,.22); }
 }
-@media (max-width: 420px){
-  /* narrow phones: the sound and bar buttons get their own row above the names */
-  .masthead{ margin-top: 44px; }
+@media (max-width: 350px){
+  .couple::before, .couple::after{ width: 18px; }
 }
 .bar-link svg{ width: 18px; height: 18px; flex: none; animation: nudge 1.8s ease-in-out infinite; }
 @keyframes nudge{ 0%, 100%{ transform: translateY(0); } 50%{ transform: translateY(3px); } }
@@ -590,13 +587,15 @@ html.locked, html.locked body{ overflow: hidden; }
     <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 9.5H7L11.5 5.5v13L7 14.5H3.5z"/><path d="M15.5 9.5l5 5M20.5 9.5l-5 5"/></svg>
     <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 9.5H7L11.5 5.5v13L7 14.5H3.5z"/><path d="M15 9a4.2 4.2 0 0 1 0 6"/><path d="M17.8 6.3a8 8 0 0 1 0 11.4"/></svg>
   </button>
-  <a class="bar-link" id="barLink" href="#notes">
-    <span>עוד בבר</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
-  </a>
   <header class="masthead">
     <div class="couple">ענבל <span class="amp">&amp;</span> אלון</div>
-    <div class="date">14.12.2026</div>
+    <div class="date-row">
+      <div class="date">14.12.2026</div>
+      <a class="bar-link" id="barLink" href="#notes">
+        <span>עוד בבר</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+      </a>
+    </div>
     <h1 class="title" lang="en">Pour Decisions<span class="dot">.</span></h1>
     <p class="lede">קובייה אחת, שישה קוקטיילים, אפס התלבטויות</p>
   </header>
