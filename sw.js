@@ -1,7 +1,7 @@
 /* Pour Decisions – offline cache.
    After the first visit the page opens instantly and works with no signal.
    Bump VERSION whenever index.html changes so phones pick up the new copy. */
-const VERSION = "pour-decisions-v6";
+const VERSION = "pour-decisions-v7";
 const CORE = ["./", "./index.html"];
 
 self.addEventListener("install", (event) => {
