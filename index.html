@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Pour Decisions · ענבל ואלון</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="supported-color-schemes" content="dark">
+<meta name="theme-color" content="#120f1f">
+<meta name="darkreader-lock">
+<meta name="description" content="הקובייה של ענבל ואלון – תנו לקובייה לבחור לכם קוקטייל מהבר.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;700;800&family=Playfair+Display:ital,wght@0,700;0,800;1,600;1,800&display=swap">
+<style>
+/* Layout: one centered mobile column — monogram header, a spotlit bar-top stage for the die,
+   the call to action, the ivory "menu card" result, then quiet bar notes. Dark-only by design. */
+:root{
+  color-scheme: dark;
+  --night:      #120f1f;   /* page ground: midnight plum */
+  --night-2:    #1d1832;   /* raised panels */
+  --gold:       #e2bf7d;   /* champagne gold accent */
+  --gold-deep:  #a87c3c;
+  --ivory:      #fbf4e6;   /* result card paper */
+  --ink:        #241c2e;   /* text on ivory */
+  --ink-soft:   #5b4f63;
+  --text:       #f6efe2;   /* text on night */
+  --text-soft:  #c9bfd6;
+
+  --f-latin: "Playfair Display", "Didot", "Bodoni 72", Georgia, "Times New Roman", serif;
+  --f-he-display: "Frank Ruhl Libre", "David", "Times New Roman", serif;
+  --f-body: "Heebo", "Assistant", "Segoe UI", Arial, sans-serif;
+
+  --s: min(50vw, 214px);      /* die edge */
+  --h: calc(var(--s) / 2);
+}
+@media (max-height: 700px){ :root{ --s: min(44vw, 176px); } }
+@media (min-width: 700px){ :root{ --s: 220px; } }
+
+/* Re-assert the same palette under any system theme so nothing gets auto-darkened or inverted */
+@media (prefers-color-scheme: dark){ :root{ color-scheme: dark; } }
+@media (prefers-color-scheme: light){ :root{ color-scheme: dark; } }
+
+*,*::before,*::after{ box-sizing: border-box; }
+[hidden]{ display: none !important; }
+html{
+  background: var(--night);
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+body{
+  margin: 0;
+  min-height: 100%;
+  background-color: var(--night);
+  background-image:
+    radial-gradient(120% 60% at 50% -8%, #3a2a55 0%, rgba(58,42,85,0) 62%),
+    radial-gradient(80% 40% at 100% 40%, rgba(226,191,125,.07) 0%, rgba(226,191,125,0) 70%),
+    radial-gradient(80% 40% at 0% 75%, rgba(120,80,200,.10) 0%, rgba(120,80,200,0) 70%);
+  background-attachment: scroll;
+  color: var(--text);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+button{ font: inherit; color: inherit; }
+:focus-visible{ outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 12px; }
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+.en{ font-family: var(--f-latin); unicode-bidi: isolate; }
+
+.page{
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  padding-left: max(18px, env(safe-area-inset-left, 0px));
+  padding-right: max(18px, env(safe-area-inset-right, 0px));
+  padding-block: max(18px, env(safe-area-inset-top, 0px)) max(28px, env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------- Champagne bubbles (ambient) ---------- */
+.bubbles{ position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.bubbles span{
+  position: absolute; bottom: -20px; border-radius: 50%;
+  border: 1px solid rgba(226,191,125,.45);
+  background: radial-gradient(circle at 35% 30%, rgba(255,240,205,.5), rgba(226,191,125,.06) 60%);
+  animation: rise linear infinite;
+  opacity: 0;
+}
+@keyframes rise{
+  0%{ transform: translate3d(0,0,0); opacity: 0; }
+  12%{ opacity: .75; }
+  85%{ opacity: .45; }
+  100%{ transform: translate3d(var(--dx), -105vh, 0); opacity: 0; }
+}
+
+/* ---------- Header ---------- */
+.masthead{ text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.couple{
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--f-he-display); font-weight: 700;
+  font-size: 1.05rem; letter-spacing: .02em; color: var(--gold);
+}
+.couple::before,.couple::after{
+  content: ""; width: 34px; height: 1px;
+  background: linear-gradient(90deg, rgba(226,191,125,0), var(--gold));
+}
+.couple::after{ transform: scaleX(-1); }
+.couple .amp{ font-family: var(--f-latin); font-style: italic; font-weight: 600; font-size: 1.2em; color: #f3dcae; }
+.date{
+  font-family: var(--f-latin); font-size: .82rem; letter-spacing: .32em;
+  color: var(--text-soft); direction: ltr; unicode-bidi: isolate; padding-left: .32em;
+}
+.title{
+  margin: 6px 0 0;
+  font-family: var(--f-latin); font-weight: 800; font-style: italic;
+  font-size: clamp(2.5rem, 12.5vw, 3.6rem);
+  line-height: .98;
+  letter-spacing: -.01em;
+  color: var(--gold);
+  background: linear-gradient(175deg, #fff3d6 8%, #e9c584 46%, #b88a45 92%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  direction: ltr;
+  padding: 0 .08em .06em;
+}
+.title .dot{ -webkit-text-fill-color: #ff8fb1; color: #ff8fb1; }
+.lede{
+  margin: 8px 0 0;
+  font-size: .98rem; color: var(--text-soft); font-weight: 500;
+  text-wrap: balance;
+}
+
+/* ---------- Stage + die ---------- */
+.stage{
+  position: relative;
+  width: 100%;
+  height: calc(var(--s) * 1.72);
+  margin-top: 2px;
+  perspective: 1100px;
+  -webkit-perspective: 1100px;
+  perspective-origin: 50% 8%;
+  -webkit-perspective-origin: 50% 8%;
+  cursor: pointer;
+  -webkit-user-select: none; user-select: none;
+  touch-action: manipulation;
+}
+.spot{
+  position: absolute; left: 50%; top: -6%;
+  width: calc(var(--s) * 2.3); height: 112%;
+  transform: translateX(-50%);
+  background: radial-gradient(48% 44% at 50% 70%, rgba(255,226,170,.22) 0%, rgba(255,226,170,.07) 55%, rgba(255,226,170,0) 100%);
+  pointer-events: none;
+}
+.counter{
+  position: absolute; left: 50%; bottom: calc(var(--s) * .02);
+  width: calc(var(--s) * 2.05); height: calc(var(--s) * .5);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(226,191,125,.20), rgba(226,191,125,.05) 70%, rgba(226,191,125,0));
+  border-top: 1px solid rgba(226,191,125,.35);
+  pointer-events: none;
+}
+.shadow{
+  position: absolute; left: 50%; bottom: calc(var(--s) * .13);
+  width: calc(var(--s) * 1.05); height: calc(var(--s) * .22);
+  margin-left: calc(var(--s) * -.525);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0,0,0,.65), rgba(0,0,0,0));
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+.mover{
+  position: absolute; left: 50%; bottom: calc(var(--s) * .24);
+  width: var(--s); height: var(--s);
+  margin-left: calc(var(--s) * -.5);
+  transform-style: preserve-3d; -webkit-transform-style: preserve-3d;
+  transform-origin: 50% 100%;
+  will-change: transform;
+  transition: opacity .22s ease;
+}
+.mover.fading{ opacity: 0; }
+.cube{
+  position: absolute; inset: 0;
+  transform-style: preserve-3d; -webkit-transform-style: preserve-3d;
+  will-change: transform;
+}
+.core, .face{
+  position: absolute; inset: 0;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+}
+.core{ background: linear-gradient(140deg, #d9b26c, #8f6630); }
+.face{
+  border-radius: 11%;
+  padding: 6.5%;
+  background: linear-gradient(140deg, #fbe3ad 0%, #dcb26a 40%, #a47634 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,248,225,.6), inset 0 0 calc(var(--s)*.06) rgba(90,55,10,.45);
+}
+.p0{ transform: rotateY(0deg)   translateZ(var(--h)); }
+.p1{ transform: rotateY(90deg)  translateZ(var(--h)); }
+.p2{ transform: rotateY(180deg) translateZ(var(--h)); }
+.p3{ transform: rotateY(-90deg) translateZ(var(--h)); }
+.p4{ transform: rotateX(90deg)  translateZ(var(--h)); }
+.p5{ transform: rotateX(-90deg) translateZ(var(--h)); }
+.core.p0{ transform: rotateY(0deg)   translateZ(calc(var(--h) - 2px)); }
+.core.p1{ transform: rotateY(90deg)  translateZ(calc(var(--h) - 2px)); }
+.core.p2{ transform: rotateY(180deg) translateZ(calc(var(--h) - 2px)); }
+.core.p3{ transform: rotateY(-90deg) translateZ(calc(var(--h) - 2px)); }
+.core.p4{ transform: rotateX(90deg)  translateZ(calc(var(--h) - 2px)); }
+.core.p5{ transform: rotateX(-90deg) translateZ(calc(var(--h) - 2px)); }
+
+.tile{
+  position: relative;
+  width: 100%; height: 100%;
+  border-radius: 13%;
+  overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: calc(var(--s) * .035);
+  background: linear-gradient(150deg, var(--c1), var(--c2));
+  color: var(--fc);
+  text-align: center;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.35), inset 0 calc(var(--s)*-.05) calc(var(--s)*.09) rgba(0,0,0,.18);
+}
+.tile::before{ /* gloss */
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,0) 42%);
+  pointer-events: none;
+}
+.tile::after{ /* win sheen */
+  content: ""; position: absolute; top: -20%; bottom: -20%; width: 45%; left: -60%;
+  background: linear-gradient(100deg, rgba(255,255,255,0), rgba(255,255,255,.55), rgba(255,255,255,0));
+  transform: skewX(-18deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.face.win .tile::after{ animation: sheen 1.1s .1s ease-out both; }
+@keyframes sheen{ 0%{ left: -60%; opacity: 1; } 100%{ left: 120%; opacity: 1; } }
+.face-icon{ width: calc(var(--s) * .2); height: calc(var(--s) * .2); position: relative; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+.face-name{
+  position: relative;
+  font-family: var(--f-latin); font-weight: 800;
+  font-size: calc(var(--s) * .118);
+  line-height: 1.02;
+  direction: ltr;
+  text-shadow: var(--ts);
+  padding: 0 4%;
+}
+.face-name.small{ font-size: calc(var(--s) * .094); }
+.face-rule{ width: 26%; height: 2px; border-radius: 2px; background: currentColor; opacity: .55; position: relative; }
+
+/* ---------- CTA ---------- */
+.cta{ display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; width: 100%; margin-top: 4px; }
+.cta-copy{ min-height: 3.6em; display: flex; flex-direction: column; justify-content: center; }
+.cta-q{ margin: 0; font-family: var(--f-he-display); font-weight: 700; font-size: 1.42rem; line-height: 1.25; color: var(--text); text-wrap: balance; }
+.cta-a{ margin: 2px 0 0; font-size: 1.04rem; color: var(--gold); font-weight: 500; }
+.btn{
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 60px; width: min(100%, 330px);
+  padding: 0 28px;
+  border: 0; border-radius: 999px;
+  font-family: var(--f-body); font-weight: 800; font-size: 1.2rem;
+  color: #2a1a08;
+  background: linear-gradient(180deg, #fbe3ad 0%, #e6bf76 48%, #c4954f 100%);
+  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 -2px 0 rgba(120,80,25,.35) inset, 0 10px 26px rgba(226,191,125,.28), 0 2px 6px rgba(0,0,0,.4);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none; user-select: none;
+  transition: transform .15s ease, filter .2s ease, opacity .2s ease;
+}
+.btn svg{ width: 26px; height: 26px; flex: none; }
+.btn:active{ transform: translateY(2px) scale(.985); }
+.btn[disabled]{ cursor: default; filter: saturate(.6) brightness(.85); }
+.btn[disabled] svg{ animation: wobble .6s ease-in-out infinite; }
+@keyframes wobble{ 0%,100%{ transform: rotate(-12deg); } 50%{ transform: rotate(12deg); } }
+.hint{ margin: -4px 0 0; font-size: .86rem; color: var(--text-soft); }
+
+/* ---------- Result card ---------- */
+.result{ width: 100%; margin-top: 26px; scroll-margin-top: 16px; scroll-margin-bottom: 16px; }
+.card{
+  position: relative;
+  background: var(--ivory);
+  color: var(--ink);
+  border-radius: 26px;
+  padding: 0 0 24px;
+  box-shadow: 0 0 0 1px rgba(226,191,125,.7), 0 0 0 6px rgba(251,244,230,.06), 0 24px 60px rgba(0,0,0,.5);
+  text-align: center;
+  overflow: hidden;
+}
+.card.enter{ animation: cardIn .7s cubic-bezier(.2,.9,.25,1.15) both; }
+.card.stale{ opacity: .35; transform: scale(.98); transition: opacity .3s ease, transform .3s ease; }
+@keyframes cardIn{
+  0%{ opacity: 0; transform: translateY(26px) scale(.94); }
+  100%{ opacity: 1; transform: none; }
+}
+.band{
+  height: 92px;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  position: relative;
+}
+.band::after{ /* scalloped menu-card edge */
+  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 14px;
+  background: radial-gradient(circle at 10px 14px, var(--ivory) 9px, rgba(0,0,0,0) 9.5px) 0 0 / 20px 14px repeat-x;
+}
+.eyebrow{
+  position: absolute; top: 14px; left: 0; right: 0;
+  font-size: .78rem; font-weight: 700; letter-spacing: .14em;
+  color: var(--fc); opacity: .92;
+}
+.medal{
+  width: 84px; height: 84px; margin: -48px auto 0; position: relative; z-index: 1;
+  border-radius: 50%;
+  background: var(--ivory);
+  box-shadow: 0 0 0 3px var(--gold), 0 8px 20px rgba(0,0,0,.18);
+  display: grid; place-items: center;
+  color: var(--c2);
+}
+.medal svg{ width: 48px; height: 48px; }
+.card-body{ padding: 10px 24px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.drink-name{
+  margin: 4px 0 0;
+  font-family: var(--f-latin); font-weight: 800; font-style: italic;
+  font-size: clamp(2rem, 9.5vw, 2.5rem); line-height: 1.05;
+  color: var(--ink);
+  direction: ltr; unicode-bidi: isolate;
+  text-wrap: balance;
+}
+.aka{ margin: 0; font-size: .92rem; color: var(--ink-soft); }
+.aka .en{ font-style: italic; font-weight: 700; color: var(--ink); }
+.tag{
+  margin: 6px 0 2px;
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: var(--tint);
+  color: var(--deep);
+  font-weight: 700; font-size: .92rem;
+}
+.intro{ margin: 6px 0 0; font-size: 1.04rem; line-height: 1.7; color: var(--ink); text-wrap: pretty; }
+.ing{ width: 100%; margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(36,28,46,.22); }
+.ing h3{ margin: 0 0 10px; font-family: var(--f-he-display); font-size: 1.12rem; font-weight: 700; color: var(--ink); }
+.chips{ list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.chips li{
+  padding: 6px 14px; border-radius: 999px;
+  background: #ffffff;
+  border: 1.5px solid var(--c2);
+  color: var(--ink); font-weight: 500; font-size: .98rem;
+}
+.ing-note{ margin: 0; color: var(--ink); font-size: 1rem; line-height: 1.65; }
+.again{
+  margin: 20px 18px 0; padding: 18px 16px;
+  border-radius: 20px;
+  background: var(--ink);
+  color: var(--text);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.again p{ margin: 0; font-weight: 500; line-height: 1.5; }
+.again p strong{ color: var(--gold); font-weight: 700; }
+.again .btn{ min-height: 56px; font-size: 1.1rem; }
+
+/* ---------- Bar notes ---------- */
+.notes{ width: 100%; margin-top: 34px; display: flex; flex-direction: column; gap: 14px; }
+.notes-title{
+  display: flex; align-items: center; gap: 12px; justify-content: center;
+  margin: 0 0 2px;
+  font-family: var(--f-he-display); font-weight: 700; font-size: 1.25rem; color: var(--gold);
+}
+.notes-title::before,.notes-title::after{ content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(226,191,125,0), rgba(226,191,125,.55)); }
+.notes-title::after{ transform: scaleX(-1); }
+.note{
+  display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(226,191,125,.18);
+}
+.note-ic{ width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: rgba(226,191,125,.12); color: var(--gold); }
+.note-ic svg{ width: 24px; height: 24px; }
+.note h3{ margin: 0; font-size: 1.02rem; font-weight: 700; color: var(--text); }
+.note p{ margin: 2px 0 0; font-size: .96rem; line-height: 1.6; color: var(--text-soft); min-width: 0; }
+
+.lineup{
+  border-radius: 18px;
+  border: 1px solid rgba(226,191,125,.3);
+  background: linear-gradient(180deg, rgba(226,191,125,.08), rgba(226,191,125,.02));
+  overflow: hidden;
+}
+.lineup summary{
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 58px; padding: 10px 18px;
+  font-weight: 700; color: var(--text);
+}
+.lineup summary::-webkit-details-marker{ display: none; }
+.lineup summary .chev{ width: 22px; height: 22px; color: var(--gold); transition: transform .25s ease; flex: none; }
+.lineup[open] summary .chev{ transform: rotate(180deg); }
+.lineup-in{ padding: 0 18px 16px; }
+.lineup-in > p{ margin: 0 0 10px; color: var(--text-soft); font-size: .95rem; }
+.lineup ul{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.lineup li{ display: grid; grid-template-columns: 14px 1fr; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(255,255,255,.07); }
+.lineup .sw{ width: 14px; height: 14px; border-radius: 50%; margin-top: 6px; background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 0 0 2px rgba(255,255,255,.12); }
+.lineup .nm{ font-family: var(--f-latin); font-weight: 700; font-size: 1.08rem; color: var(--text); direction: ltr; unicode-bidi: isolate; }
+.lineup .sub{ font-family: var(--f-latin); font-style: italic; font-size: .88rem; color: var(--text-soft); margin-inline-start: 6px; }
+.lineup .rc{ display: block; font-size: .93rem; color: var(--text-soft); line-height: 1.5; }
+
+.foot{ margin-top: 30px; text-align: center; color: var(--text-soft); font-size: .88rem; display: flex; flex-direction: column; gap: 4px; }
+.foot .mono{ font-family: var(--f-he-display); font-weight: 700; color: var(--gold); font-size: 1rem; }
+
+#confetti{ position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+
+@media (prefers-reduced-motion: reduce){
+  .bubbles{ display: none; }
+  .card.enter{ animation: fadeIn .45s ease both; }
+  .face.win .tile::after{ animation: none; }
+  .btn[disabled] svg{ animation: none; }
+  @keyframes fadeIn{ from{ opacity: 0; } to{ opacity: 1; } }
+}
+</style>
+</head>
+<body>
+<div class="bubbles" id="bubbles" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<main class="page">
+  <header class="masthead">
+    <div class="couple">ענבל <span class="amp">&amp;</span> אלון</div>
+    <div class="date">14.12.2026</div>
+    <h1 class="title" lang="en">Pour Decisions<span class="dot">.</span></h1>
+    <p class="lede">קובייה אחת, שישה קוקטיילים, אפס התלבטויות</p>
+  </header>
+
+  <div class="stage" id="stage" role="img" aria-label="קובייה עם שישה קוקטיילים: Non-Alcoholic Drink, Aperol Spritz, Blue Me Away!, Cosmopolitan, Mojito, Peach Please!">
+    <div class="spot"></div>
+    <div class="counter"></div>
+    <div class="shadow" id="shadow"></div>
+    <div class="mover" id="mover">
+      <div class="cube" id="cube"></div>
+    </div>
+  </div>
+
+  <section class="cta" aria-label="הטלת הקובייה">
+    <div class="cta-copy">
+      <p class="cta-q" id="ctaQ">לא בטוחים מה להזמין?</p>
+      <p class="cta-a" id="ctaA">תנו לקובייה להחליט!</p>
+    </div>
+    <button class="btn" id="rollBtn" type="button">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="4" width="24" height="24" rx="6" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="11" cy="11" r="2.3" fill="currentColor"/><circle cx="16" cy="16" r="2.3" fill="currentColor"/><circle cx="21" cy="21" r="2.3" fill="currentColor"/></svg>
+      <span id="rollLabel">הטילו את הקובייה</span>
+    </button>
+    <p class="hint" id="hint">אפשר גם פשוט להקיש על הקובייה</p>
+  </section>
+
+  <section class="result" id="result" hidden aria-labelledby="drinkName">
+    <article class="card" id="card">
+      <div class="band"><span class="eyebrow">הקובייה החליטה</span></div>
+      <div class="medal" id="medal" aria-hidden="true"></div>
+      <div class="card-body">
+        <h2 class="drink-name" id="drinkName" lang="en"></h2>
+        <p class="aka" id="aka" hidden></p>
+        <p class="tag" id="tag"></p>
+        <p class="intro" id="intro"></p>
+        <div class="ing">
+          <h3 id="ingTitle">מה בכוס?</h3>
+          <ul class="chips" id="chips"></ul>
+          <p class="ing-note" id="ingNote" hidden></p>
+        </div>
+      </div>
+      <div class="again">
+        <p><strong>מוכנים למשקה הבא?</strong> תנו לקובייה עוד סיבוב!</p>
+        <button class="btn" id="againBtn" type="button">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="4" width="24" height="24" rx="6" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="11" cy="11" r="2.3" fill="currentColor"/><circle cx="21" cy="21" r="2.3" fill="currentColor"/></svg>
+          <span>הטילו שוב</span>
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <section class="notes" aria-labelledby="notesTitle">
+    <h2 class="notes-title" id="notesTitle">כמה מילים מהבר</h2>
+
+    <div class="note">
+      <div class="note-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6.5 8v5l-3 2v-7z"/><path d="M16 3l2 2"/></svg></div>
+      <div>
+        <h3>בהתאמה אישית</h3>
+        <p>המיקסולוגים שלנו ישמחו להתאים את הקוקטיילים להעדפות שלכם! דברו איתם וספרו להם מה אתם אוהבים, והם כבר ידאגו לשאר.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="note-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 7a4 4 0 0 1-8 0z"/><path d="M12 14v6"/><path d="M8.5 21h7"/><path d="M7.4 7h9.2"/></svg></div>
+      <div>
+        <h3>ויש עוד המון בבר</h3>
+        <p>אל תשכחו שבבר שלנו מחכים לכם גם סנגריה חמה, ג׳ין וטוניק, ערק למי שאוהב, ועוד המון משקאות.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="note-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/><path d="M9.5 15a2.5 2.5 0 0 0 2.5 2.5"/></svg></div>
+      <div>
+        <h3>גם בלי אלכוהול</h3>
+        <p>לא שותים אלכוהול? אין בעיה! המיקסולוגים ירקחו לכם משקה ללא אלכוהול שלא נופל מאף קוקטייל.</p>
+      </div>
+    </div>
+
+    <details class="lineup" id="lineup">
+      <summary>
+        <span>הצצה לכל הקוקטיילים שעל הקובייה</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="lineup-in">
+        <p>סקרנים? הנה כל ששת הקוקטיילים שמחכים לכם בבר. אולי תגלו כאן את האהוב החדש שלכם.</p>
+        <ul id="lineupList"></ul>
+      </div>
+    </details>
+  </section>
+
+  <footer class="foot">
+    <span class="mono">ענבל ואלון · <span dir="ltr">14.12.2026</span></span>
+    <span>לחיים! ומי ששותה, לא נוהג.</span>
+  </footer>
+
+  <p class="sr-only" id="live" aria-live="assertive" role="status"></p>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================= Drinks ================= */
+  var ICONS = {
+    nonalc: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17h22l-2.6 23.2a3 3 0 0 1-3 2.7h-10.8a3 3 0 0 1-3-2.7z"/><path d="M14.3 27h19.4"/><path d="M27.5 17l5-11h5"/><path d="M9 5.5l1.3 3 3 1.3-3 1.3-1.3 3-1.3-3-3-1.3 3-1.3z" fill="currentColor" stroke-width="1.2"/><circle cx="21" cy="34" r="1.4" fill="currentColor" stroke="none"/><circle cx="26.5" cy="31" r="1.1" fill="currentColor" stroke="none"/></svg>',
+    aperol: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9h20c0 10.5-3.6 16.5-10 16.5S12 19.5 12 9z"/><path d="M22 25.5V39"/><path d="M15 42h14"/><path d="M12.6 15h18.8"/><circle cx="34.5" cy="10.5" r="7"/><path d="M34.5 3.5v14M27.5 10.5h14M29.6 5.6l9.8 9.8M39.4 5.6l-9.8 9.8" stroke-width="1.6"/></svg>',
+    blue: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8h22l-3.2 32.4a2.5 2.5 0 0 1-2.5 2.3H18.7a2.5 2.5 0 0 1-2.5-2.3z"/><path d="M14.4 21c3-2.6 6.3-2.6 9.6 0s6.6 2.6 9.6 0"/><circle cx="20" cy="31" r="1.8" fill="currentColor" stroke="none"/><circle cx="27" cy="35.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="25" cy="27.5" r="1" fill="currentColor" stroke="none"/></svg>',
+    cosmo: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h34L24 27z"/><path d="M24 27v13"/><path d="M16 42.5h16"/><path d="M11.5 14.5h25"/><path d="M33 4.5c2.6 1 4.2 3.2 4.4 6.3"/><circle cx="33" cy="4.8" r="0.6" fill="currentColor"/></svg>',
+    mojito: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 40C9 21 21 9 40 8c0 19-12 32-31 32z"/><path d="M9 40L29 19"/><path d="M17.5 31.5h7.5M22.5 26h7"/></svg>',
+    peach: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 15.5c-9.5-4.5-17.5 1.5-17.5 11.5S14.3 43 24 43s17.5-6 17.5-16S33.5 11 24 15.5z"/><path d="M24 15.5c-2.4 6.5-2.4 15 0 23"/><path d="M24 15.5c.6-5 3.8-8.6 10-9.5-.8 6-4.4 9.2-10 9.5z"/></svg>'
+  };
+
+  var WHITE_TS = '0 1px 0 rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.28)';
+  var DRINKS = [
+    {
+      key: "nonalc", name: "Non-Alcoholic Drink", face: "Non&#8209;Alcoholic<br>Drink", small: true,
+      c1: "#c0a8ff", c2: "#6a4bd6", fc: "#ffffff", ts: WHITE_TS, tint: "#ece5ff", deep: "#4b2fb0",
+      tag: "בלי אלכוהול, עם המון טעם",
+      intro: "הפעם הולכים על משהו ללא אלכוהול! בקשו מהמיקסולוגים שלנו להכין לכם קוקטייל ללא אלכוהול, במיוחד בשבילכם ובדיוק כמו שאתם אוהבים.",
+      ingTitle: "מה בכוס? מה שבא לכם!",
+      note: "אין כאן מתכון קבוע: המיקסולוגים ירכיבו לכם משקה אישי לגמרי, לפי הטעם שלכם.",
+      recipe: "בלי מתכון קבוע, בהתאמה אישית לטעם שלכם"
+    },
+    {
+      key: "aperol", name: "Aperol Spritz", face: "Aperol<br>Spritz",
+      c1: "#ffa143", c2: "#d9380f", fc: "#ffffff", ts: WHITE_TS, tint: "#ffe6d2", deep: "#a8330c",
+      tag: "קיץ איטלקי בכוס, גם בדצמבר",
+      intro: "בועות, תפוזים וקצת שמש איטלקית! האפרול שפריץ בא להרים לכם את מצב הרוח (ואת הכוס). קליל, מבעבע ומרענן, ולגימה אחת מספיקה כדי להרגיש על מרפסת מול הים.",
+      ingredients: ["אפרול", "שמפניה", "ספרייט", "סודה", "דש תפוזים"],
+      recipe: "אפרול, שמפניה, ספרייט, סודה ודש תפוזים"
+    },
+    {
+      key: "blue", name: "Blue Me Away!", sub: "Blue Lagoon", face: "Blue Me<br>Away!",
+      c1: "#47c8ff", c2: "#1640c9", fc: "#ffffff", ts: WHITE_TS, tint: "#dcefff", deep: "#1037a8",
+      tag: "כחול שמשאיר אתכם בלי מילים",
+      intro: "הקובייה החליטה שהגיע הזמן לצבע! הכחול העז הזה נראה מהמם ביד, מדהים בתמונות ומרענן בכל לגימה. רק תיזהרו, הוא עלול לסחוף אתכם ישר לרחבה.",
+      ingredients: ["וודקה", "סאוור", "בלו קרסאו"],
+      recipe: "וודקה, סאוור ובלו קרסאו"
+    },
+    {
+      key: "cosmo", name: "Cosmopolitan", face: "Cosmo&shy;politan", small: true,
+      c1: "#ff5a90", c2: "#9c0f45", fc: "#ffffff", ts: WHITE_TS, tint: "#ffe0ea", deep: "#940c40",
+      tag: "קלאסיקה אלגנטית בוורוד",
+      intro: "אלגנטי, ורוד ופירותי בדיוק במידה: הקוסמופוליטן הוא קלאסיקה שאף פעם לא יוצאת מהאופנה. מחזיקים את כוס המרטיני, מחייכים למצלמה ומרגישים כוכבי הערב.",
+      ingredients: ["וודקה", "חמוציות", "סאוור", "דש תפוזים"],
+      recipe: "וודקה, חמוציות, סאוור ודש תפוזים"
+    },
+    {
+      key: "mojito", name: "Mojito", face: "Mojito",
+      c1: "#74e3a4", c2: "#0f7d4a", fc: "#ffffff", ts: WHITE_TS, tint: "#d9f6e5", deep: "#0b6a3e",
+      tag: "רענן, ירוק ומלא נענע",
+      intro: "קריר, ירוק ומלא בנענע טרייה: המוחיטו הוא משב רוח קובני באמצע החתונה. בדיוק מה שצריך כדי להתרענן בין ריקוד לריקוד ולחזור לרחבה עם אנרגיות מחודשות.",
+      ingredients: ["רום לבן", "סאוור", "ליקר תפוז", "לימון ונענע כתושים"],
+      recipe: "רום לבן, סאוור, ליקר תפוז, לימון ונענע כתושים"
+    },
+    {
+      key: "peach", name: "Peach Please!", sub: "The Naughty", face: "Peach<br>Please!",
+      c1: "#ffd9a8", c2: "#ff8a66", fc: "#5c2112", ts: "0 1px 0 rgba(255,255,255,.45)", tint: "#ffe9dc", deep: "#a4401f",
+      tag: "פירותי, טרופי וקצת שובב",
+      intro: "פירותי, טרופי ושובב בדיוק במידה. אפרסק ואננס פוגשים רום כהה, ויש סיבה טובה לכך שבשמו המקורי קוראים לו The Naughty. לגימה אחת, ואתם כבר בחופשה באיים.",
+      ingredients: ["רום כהה", "אננס", "סאוור", "אפרסק"],
+      recipe: "רום כהה, אננס, סאוור ואפרסק"
+    }
+  ];
+
+  /* Cube orientation that brings face i to the front (matches .p0–.p5 placement) */
+  var TARGET = [ {x:0,y:0}, {x:0,y:-90}, {x:0,y:180}, {x:0,y:90}, {x:-90,y:0}, {x:90,y:0} ];
+
+  /* ================= Elements ================= */
+  var $ = function(id){ return document.getElementById(id); };
+  var stage = $("stage"), mover = $("mover"), cube = $("cube"), shadow = $("shadow");
+  var rollBtn = $("rollBtn"), rollLabel = $("rollLabel"), againBtn = $("againBtn");
+  var ctaQ = $("ctaQ"), ctaA = $("ctaA"), hint = $("hint");
+  var result = $("result"), card = $("card"), live = $("live");
+
+  var reduceMQ = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+  function reduced(){ return !!(reduceMQ && reduceMQ.matches); }
+
+  function setVars(el, d){
+    el.style.setProperty("--c1", d.c1); el.style.setProperty("--c2", d.c2);
+    el.style.setProperty("--fc", d.fc); el.style.setProperty("--ts", d.ts);
+    el.style.setProperty("--tint", d.tint); el.style.setProperty("--deep", d.deep);
+  }
+
+  /* Build die faces: the cocktail names live on the cube itself */
+  var faces = [];
+  (function buildCube(){
+    var html = "";
+    for (var i = 0; i < 6; i++) html += '<div class="core p' + i + '"></div>';
+    cube.innerHTML = html;
+    DRINKS.forEach(function(d, i){
+      var f = document.createElement("div");
+      f.className = "face p" + i;
+      f.innerHTML = '<div class="tile"><div class="face-icon">' + ICONS[d.key] + '</div>' +
+        '<div class="face-name' + (d.small ? ' small' : '') + '" lang="en">' + d.face + '</div>' +
+        '<div class="face-rule"></div></div>';
+      setVars(f, d);
+      cube.appendChild(f);
+      faces.push(f);
+    });
+  })();
+
+  /* Lineup list */
+  (function buildLineup(){
+    var ul = $("lineupList");
+    DRINKS.forEach(function(d){
+      var li = document.createElement("li");
+      setVars(li, d);
+      li.innerHTML = '<span class="sw" aria-hidden="true"></span><div><span class="nm" lang="en" dir="ltr">' + d.name + '</span>' +
+        (d.sub ? '<span class="sub" lang="en" dir="ltr">(' + d.sub + ')</span>' : '') +
+        '<span class="rc">' + d.recipe + '</span></div>';
+      ul.appendChild(li);
+    });
+  })();
+
+  /* Champagne bubbles */
+  (function buildBubbles(){
+    if (reduced()) return;
+    var box = $("bubbles"), n = 14, html = "";
+    for (var i = 0; i < n; i++){
+      var sz = 4 + Math.random() * 10;
+      html += '<span style="left:' + (Math.random()*100).toFixed(1) + '%;width:' + sz.toFixed(1) + 'px;height:' + sz.toFixed(1) +
+        'px;animation-duration:' + (11 + Math.random()*12).toFixed(1) + 's;animation-delay:-' + (Math.random()*20).toFixed(1) +
+        's;--dx:' + ((Math.random()-.5)*60).toFixed(0) + 'px"></span>';
+    }
+    box.innerHTML = html;
+  })();
+
+  /* ================= Fair randomness ================= */
+  // Unbiased integer in [0, n) via rejection sampling on crypto.getRandomValues.
+  function secureIndex(n){
+    var c = window.crypto || window.msCrypto;
+    var buf = new Uint32Array(1);
+    var limit = Math.floor(4294967296 / n) * n;
+    var v;
+    do { c.getRandomValues(buf); v = buf[0]; } while (v >= limit);
+    return v % n;
+  }
+
+  /* ================= Die physics-ish animation ================= */
+  var S = { rx: -24, ry: 28, rz: 0, x: 0, y: 14, z: 0, squash: 0 };
+  var mode = "idle";   // idle | rolling | landed
+  var R = null;        // current roll
+  var rafId = 0, last = 0;
+  var busy = false;
+  var dieSize = 200;
+
+  function measure(){ dieSize = mover.offsetWidth || 200; }
+  measure();
+  window.addEventListener("resize", measure);
+
+  function norm(a){ a = a % 360; if (a >= 180) a -= 360; if (a < -180) a += 360; return a; }
+  function spinTo(from, to, dir, turns){
+    var d = ((to - from) % 360 + 360) % 360;   // 0..359 forward distance
+    if (dir < 0 && d !== 0) d -= 360;
+    return from + d + dir * 360 * turns;
+  }
+  function lerp(a, b, t){ return a + (b - a) * t; }
+  function sign(){ return Math.random() < .5 ? -1 : 1; }  // cosmetic only
+
+  function apply(){
+    var sq = S.squash;
+    mover.style.transform = "translate3d(" + S.x.toFixed(2) + "px," + (-S.y).toFixed(2) + "px," + S.z.toFixed(2) + "px) scale3d(" +
+      (1 + .05*sq).toFixed(4) + "," + (1 - .08*sq).toFixed(4) + ",1)";
+    cube.style.transform = "rotateZ(" + S.rz.toFixed(2) + "deg) rotateX(" + S.rx.toFixed(2) + "deg) rotateY(" + S.ry.toFixed(2) + "deg)";
+    var lift = Math.max(0, S.y) / (dieSize * 0.95);
+    var k = Math.max(.35, 1 - lift * .65);
+    shadow.style.transform = "translate3d(" + (S.x * .8).toFixed(2) + "px,0,0) scale(" + k.toFixed(3) + ")";
+    shadow.style.opacity = Math.max(.2, 1 - lift * .8).toFixed(3);
+  }
+
+  // Throw: one big arc then decaying bounces (fractions of throw time, relative heights)
+  var SEGS = [ [0, .40, 1], [.40, .62, .30], [.62, .76, .10], [.76, .85, .03] ];
+  var SHAKE_MS = 480, THROW_MS = 2650;
+
+  function impact(strength){
+    S.squash = Math.min(1, S.squash + strength);
+    if (navigator.vibrate && strength > .15) { try { navigator.vibrate(strength > .6 ? 18 : 9); } catch(e){} }
+  }
+
+  function tick(now){
+    rafId = 0;
+    var dt = last ? Math.min(.05, (now - last) / 1000) : .016;
+    last = now;
+
+    if (mode === "idle"){
+      S.rx += 10 * dt; S.ry += 17 * dt;
+      S.y = dieSize * .07 + Math.sin(now / 650) * dieSize * .035;
+    } else if (mode === "rolling"){
+      stepRoll(now);
+    }
+    S.squash *= Math.pow(.0008, dt);   // quick decay
+    if (S.squash < .002) S.squash = 0;
+    apply();
+
+    if (mode !== "landed" || S.squash > 0) rafId = requestAnimationFrame(tick);
+  }
+  function startLoop(){ if (!rafId){ last = 0; rafId = requestAnimationFrame(tick); } }
+
+  function stepRoll(now){
+    var el = now - R.t0;
+    if (el < SHAKE_MS){
+      // Anticipation: settle onto the bar, shake, crouch
+      var e = el / SHAKE_MS, env = Math.sin(Math.PI * e);
+      S.y = R.y0 * (1 - Math.min(1, e * 2.2));
+      S.x = env * dieSize * .035 * Math.sin(el / 1000 * Math.PI * 2 * 9);
+      S.rz = R.from.z + env * 7 * Math.sin(el / 1000 * Math.PI * 2 * 7);
+      S.squash = e > .65 ? (e - .65) / .35 * .9 : S.squash;
+      return;
+    }
+    if (!R.thrown){ R.thrown = true; S.squash = 0; }
+    var t = Math.min(1, (el - SHAKE_MS) / THROW_MS);
+    var p = 1 - Math.pow(1 - t, 3.2);
+    S.rx = lerp(R.from.x, R.to.x, p);
+    S.ry = lerp(R.from.y, R.to.y, p);
+    S.rz = lerp(R.from.z, R.to.z, p);
+
+    var h = 0, seg = SEGS.length;
+    for (var i = 0; i < SEGS.length; i++){
+      var s = SEGS[i];
+      if (t >= s[0] && t < s[1]){ var u = (t - s[0]) / (s[1] - s[0]); h = s[2] * 4 * u * (1 - u); seg = i; break; }
+    }
+    if (seg !== R.seg){
+      if (R.seg >= 0) impact(SEGS[R.seg][2] * .9 + .08);
+      R.seg = seg;
+    }
+    S.y = h * dieSize * .95;
+    var drift = Math.min(1, t / .76);
+    S.x = R.dir * dieSize * .26 * Math.sin(Math.PI * drift) * (1 - t * .4);
+    S.z = dieSize * .45 * Math.sin(Math.PI * Math.min(1, t / .62));
+
+    if (t >= 1) land();
+  }
+
+  function land(){
+    var tg = TARGET[R.idx];
+    S.rx = tg.x; S.ry = tg.y; S.rz = 0; S.x = 0; S.y = 0; S.z = 0;
+    mode = "landed";
+    reveal(R.idx);
+  }
+
+  function setRollingUI(on){
+    rollBtn.disabled = on; againBtn.disabled = on;
+    rollBtn.setAttribute("aria-busy", on ? "true" : "false");
+    if (on){
+      rollLabel.textContent = "הקובייה מתגלגלת…";
+      ctaQ.textContent = "רגע של מתח…";
+      ctaA.textContent = "מחזיקים אצבעות!";
+    }
+  }
+
+  function roll(){
+    if (busy) return;
+    busy = true;
+    var idx = secureIndex(6);
+    mode = "rolling";
+    setRollingUI(true);
+    hint.hidden = true;
+    live.textContent = "";
+    faces.forEach(function(f){ f.classList.remove("win"); });
+    if (!result.hidden){ card.classList.remove("enter"); card.classList.add("stale"); }
+
+    if (reduced()){
+      // Gentle cross-fade straight to the result
+      mover.classList.add("fading");
+      setTimeout(function(){
+        var tg = TARGET[idx];
+        S.rx = tg.x; S.ry = tg.y; S.rz = 0; S.x = 0; S.y = 0; S.z = 0; S.squash = 0;
+        apply();
+        mover.classList.remove("fading");
+        setTimeout(function(){ mode = "landed"; reveal(idx); }, 260);
+      }, 260);
+      return;
+    }
+
+    var from = { x: norm(S.rx), y: norm(S.ry), z: norm(S.rz) };
+    var tg = TARGET[idx];
+    R = {
+      idx: idx, t0: performance.now(), y0: S.y, seg: -1, thrown: false, dir: sign(),
+      from: from,
+      to: {
+        x: spinTo(from.x, tg.x, sign(), 2),
+        y: spinTo(from.y, tg.y, sign(), 1 + (Math.random() < .5 ? 1 : 0)),
+        z: spinTo(from.z, 0, sign(), Math.random() < .6 ? 1 : 0)
+      }
+    };
+    S.rx = from.x; S.ry = from.y; S.rz = from.z;
+    startLoop();
+  }
+
+  /* ================= Reveal ================= */
+  function fillCard(d){
+    setVars(card, d);
+    $("medal").innerHTML = ICONS[d.key];
+    $("drinkName").textContent = d.name;
+    var aka = $("aka");
+    if (d.sub){ aka.innerHTML = 'בשמו המקורי: <span class="en" lang="en" dir="ltr">' + d.sub + '</span>'; aka.hidden = false; }
+    else { aka.hidden = true; aka.textContent = ""; }
+    $("tag").textContent = d.tag;
+    $("intro").textContent = d.intro;
+    $("ingTitle").textContent = d.ingTitle || "מה בכוס?";
+    var chips = $("chips"), note = $("ingNote");
+    chips.innerHTML = "";
+    if (d.ingredients){
+      d.ingredients.forEach(function(x){ var li = document.createElement("li"); li.textContent = x; chips.appendChild(li); });
+      chips.hidden = false; note.hidden = true;
+    } else {
+      chips.hidden = true; note.textContent = d.note; note.hidden = false;
+    }
+  }
+
+  function reveal(idx){
+    var d = DRINKS[idx];
+    faces[idx].classList.add("win");
+    impact(.5);
+    startLoop();
+
+    setTimeout(function(){
+      fillCard(d);
+      result.hidden = false;
+      card.classList.remove("stale", "enter");
+      void card.offsetWidth;
+      card.classList.add("enter");
+
+      rollLabel.textContent = "הטילו שוב";
+      ctaQ.textContent = "מוכנים למשקה הבא?";
+      ctaA.textContent = "תנו לקובייה עוד סיבוב!";
+      live.textContent = "הקובייה בחרה: " + d.name + (d.sub ? " (" + d.sub + ")" : "") + ". " + d.tag;
+
+      burst(d);
+
+      setTimeout(function(){
+        var r = card.getBoundingClientRect();
+        if (r.top > window.innerHeight * .62 || r.bottom > window.innerHeight + 4){
+          result.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
+        }
+        setRollingUI(false);
+        busy = false;
+      }, reduced() ? 150 : 650);
+    }, reduced() ? 60 : 380);
+  }
+
+  /* ================= Confetti ================= */
+  var cv = $("confetti"), ctx = cv.getContext && cv.getContext("2d"), parts = [], cRaf = 0, cStart = 0;
+  function sizeCanvas(){
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(window.innerWidth * dpr); cv.height = Math.round(window.innerHeight * dpr);
+    if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function burst(d){
+    if (!ctx || reduced()) return;
+    sizeCanvas();
+    var r = mover.getBoundingClientRect();
+    var ox = r.left + r.width / 2, oy = r.top + r.height * .4;
+    var colors = [d.c1, d.c2, "#e2bf7d", "#fff3d6", "#f7d38c"];
+    for (var i = 0; i < 90; i++){
+      var a = -Math.PI / 2 + (Math.random() - .5) * Math.PI * 1.1;
+      var sp = 5 + Math.random() * 9;
+      parts.push({
+        x: ox, y: oy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 2,
+        w: 5 + Math.random() * 6, h: 3 + Math.random() * 6,
+        r: Math.random() * 6.28, vr: (Math.random() - .5) * .35,
+        c: colors[(Math.random() * colors.length) | 0], round: Math.random() < .3
+      });
+    }
+    cStart = performance.now();
+    if (!cRaf) cRaf = requestAnimationFrame(drawConfetti);
+  }
+  function drawConfetti(now){
+    cRaf = 0;
+    var W = window.innerWidth, H = window.innerHeight;
+    ctx.clearRect(0, 0, W, H);
+    var fade = Math.max(0, 1 - Math.max(0, now - cStart - 1500) / 900);
+    for (var i = parts.length - 1; i >= 0; i--){
+      var p = parts[i];
+      p.vy += .28; p.vx *= .985; p.vy *= .985;
+      p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      if (p.y > H + 20) { parts.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = fade;
+      ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      ctx.fillStyle = p.c;
+      if (p.round){ ctx.beginPath(); ctx.arc(0, 0, p.w / 2.4, 0, 6.283); ctx.fill(); }
+      else ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.abs(Math.cos(p.r * 1.7)) + 1);
+      ctx.restore();
+    }
+    if (parts.length && fade > 0) cRaf = requestAnimationFrame(drawConfetti);
+    else { parts.length = 0; ctx.clearRect(0, 0, W, H); }
+  }
+
+  /* ================= Wiring ================= */
+  rollBtn.addEventListener("click", roll);
+  stage.addEventListener("click", roll);
+  againBtn.addEventListener("click", function(){
+    if (busy) return;
+    stage.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "center" });
+    setTimeout(roll, reduced() ? 0 : 280);
+  });
+
+  apply();
+  if (reduced()){
+    S.rx = -18; S.ry = 32; S.y = 0; apply(); mode = "landed";
+  } else {
+    startLoop();
+  }
+})();
+</script>
+</body>
+</html>
