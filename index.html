@@ -289,6 +289,27 @@ button{ font: inherit; color: inherit; }
 .btn[disabled] svg{ animation: wobble .6s ease-in-out infinite; }
 @keyframes wobble{ 0%,100%{ transform: rotate(-12deg); } 50%{ transform: rotate(12deg); } }
 .hint{ margin: -4px 0 0; font-size: .86rem; color: var(--text-soft); }
+.bar-link{
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; margin-top: 2px; padding: 8px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(226,191,125,.55);
+  background: rgba(226,191,125,.1);
+  color: var(--gold);
+  font-weight: 700; font-size: 1rem; line-height: 1.3;
+  text-decoration: none;
+  cursor: pointer; touch-action: manipulation;
+  transition: background .2s ease;
+}
+.bar-link:active{ background: rgba(226,191,125,.2); }
+.bar-link svg{ width: 18px; height: 18px; flex: none; animation: nudge 1.8s ease-in-out infinite; }
+@keyframes nudge{ 0%, 100%{ transform: translateY(0); } 50%{ transform: translateY(3px); } }
+.notes{ scroll-margin-top: 16px; }
+.notes.flash .note, .notes.flash .lineup{ animation: notesGlow 1.6s ease-out; }
+@keyframes notesGlow{
+  0%{ border-color: rgba(226,191,125,.95); box-shadow: 0 0 0 3px rgba(226,191,125,.35); }
+  100%{ box-shadow: 0 0 0 3px rgba(226,191,125,0); }
+}
 
 /* ---------- Result card ---------- */
 .result{ width: 100%; margin-top: 26px; scroll-margin-top: 16px; scroll-margin-bottom: 16px; }
@@ -540,6 +561,7 @@ html.locked, html.locked body{ overflow: hidden; }
   .toast, .toast.show{ transition: opacity .3s ease, visibility 0s; transform: translate(-50%, 0); }
   .face.win .tile::after{ animation: none; }
   .btn[disabled] svg{ animation: none; }
+  .bar-link svg{ animation: none; }
 }
 </style>
 </head>
@@ -578,6 +600,10 @@ html.locked, html.locked body{ overflow: hidden; }
       <span id="rollLabel">הטילו את הקובייה</span>
     </button>
     <p class="hint" id="hint">אפשר גם פשוט להקיש על הקובייה</p>
+    <a class="bar-link" id="barLink" href="#notes">
+      <span>מה עוד מחכה לכם בבר?</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+    </a>
   </section>
 
   <section class="result" id="result" hidden aria-labelledby="drinkName">
@@ -611,8 +637,8 @@ html.locked, html.locked body{ overflow: hidden; }
     </article>
   </section>
 
-  <section class="notes" aria-labelledby="notesTitle">
-    <h2 class="notes-title" id="notesTitle">כמה מילים מהבר</h2>
+  <section class="notes" id="notes" aria-labelledby="notesTitle">
+    <h2 class="notes-title" id="notesTitle" tabindex="-1">כמה מילים מהבר</h2>
 
     <div class="note">
       <div class="note-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6.5 8v5l-3 2v-7z"/><path d="M16 3l2 2"/></svg></div>
@@ -1225,6 +1251,14 @@ html.locked, html.locked body{ overflow: hidden; }
   $("tkBackdrop").addEventListener("click", function(){ closeTicket(); });
   tkAgain.addEventListener("click", function(){ closeTicket(false); rollFromCard(); });
   $("toastX").addEventListener("click", hideToast);
+
+  var notes = $("notes");
+  $("barLink").addEventListener("click", function(e){
+    e.preventDefault();
+    notes.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
+    try { $("notesTitle").focus({ preventScroll: true }); } catch(err){}
+    notes.classList.remove("flash"); void notes.offsetWidth; notes.classList.add("flash");
+  });
 
   var soundBtn = $("soundBtn");
   function syncSound(){
